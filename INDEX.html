@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>لو حججت قبل... | معرض الحج — رحلة عبر الزمن</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #f0d080;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-border: rgba(201,168,76,0.3);
+  --bg: #080604;
+  --bg2: #0f0b06;
+  --bg3: #161008;
+  --text: #f5e8c0;
+  --text-dim: rgba(245,232,192,0.55);
+  --green: #2d6a4f;
+  --green-light: #52b788;
+  --red: #8B2020;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  font-family: 'Cairo', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Stars ── */
+.stars { position:fixed; inset:0; pointer-events:none; z-index:0; }
+.star {
+  position:absolute; border-radius:50%; background:white;
+  animation: twinkle var(--d) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+@keyframes twinkle {
+  0%,100% { opacity:var(--min-o); transform:scale(1); }
+  50% { opacity:var(--max-o); transform:scale(1.4); }
+}
+
+/* ── Ambient glow ── */
+.ambient {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 70% 40% at 50% -10%, rgba(201,168,76,0.1) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 25% at 50% 110%, rgba(201,168,76,0.06) 0%, transparent 65%);
+}
+
+.container {
+  position:relative; z-index:1;
+  max-width:520px; margin:0 auto; padding:0 20px 80px;
+}
+
+/* ── Header ── */
+.header { text-align:center; padding:44px 0 36px; }
+.kaaba-icon {
+  font-size:48px; display:block; margin-bottom:14px;
+  animation: float 5s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform:translateY(0) rotate(-2deg); }
+  50% { transform:translateY(-8px) rotate(2deg); }
+}
+.header h1 {
+  font-family:'Amiri', serif;
+  font-size:32px; font-weight:700;
+  color:var(--gold-light); line-height:1.3; margin-bottom:6px;
+}
+.header .subtitle {
+  font-size:13px; color:var(--text-dim); line-height:1.8;
+}
+.gold-line {
+  width:100px; height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:18px auto;
+}
+
+/* ── Cards ── */
+.card {
+  background:linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.01) 100%);
+  border:1px solid var(--gold-border);
+  border-radius:18px; padding:28px 22px;
+  margin-bottom:20px; position:relative; overflow:hidden;
+}
+.card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),var(--gold-light),var(--gold),transparent);
+}
+.card-title {
+  font-size:12px; font-weight:700; color:var(--gold);
+  letter-spacing:1.5px; text-transform:uppercase; margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.card-title::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg,var(--gold-border),transparent);
+}
+
+/* ── Step indicator ── */
+.step-indicator {
+  display:flex; gap:0; margin-bottom:28px; border-radius:12px;
+  overflow:hidden; border:1px solid var(--gold-border);
+}
+.step-dot {
+  flex:1; text-align:center; padding:10px 4px;
+  font-size:11px; color:var(--text-dim);
+  background:rgba(255,255,255,0.02);
+  border-left:1px solid var(--gold-border);
+  transition:all 0.3s;
+}
+.step-dot:first-child { border-left:none; }
+.step-dot.active {
+  background:var(--gold-dim);
+  color:var(--gold-light); font-weight:700;
+}
+.step-dot.done {
+  background:rgba(82,183,136,0.1);
+  color:var(--green-light);
+}
+
+/* ── Country selector ── */
+.country-grid {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:9px;
+}
+.country-btn {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:12px; padding:11px 13px;
+  cursor:pointer; transition:all 0.22s;
+  display:flex; align-items:center; gap:9px;
+  font-family:'Cairo',sans-serif; font-size:13px;
+  color:var(--text-dim); text-align:right;
+}
+.country-btn:hover {
+  border-color:var(--gold); background:var(--gold-dim); color:var(--text);
+  transform:translateY(-1px);
+}
+.country-btn.active {
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.18);
+  color:var(--gold-light);
+  box-shadow:0 0 16px rgba(201,168,76,0.18);
+}
+.country-btn .flag { font-size:22px; flex-shrink:0; }
+.country-btn .c-name { font-size:12px; line-height:1.3; }
+.country-btn .c-sub { font-size:10px; color:var(--text-dim); margin-top:1px; }
+
+/* ── City dropdown ── */
+.city-section { margin-top:16px; }
+.select-label {
+  font-size:12px; color:var(--gold); font-weight:600;
+  margin-bottom:8px; display:block; letter-spacing:0.5px;
+}
+.city-select {
+  width:100%; background:rgba(255,255,255,0.04);
+  border:1px solid var(--gold-border);
+  border-radius:10px; padding:12px 16px;
+  color:var(--text); font-family:'Cairo',sans-serif; font-size:13px;
+  cursor:pointer; outline:none; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:12px center;
+  transition:border-color 0.2s;
+}
+.city-select:focus { border-color:var(--gold); }
+.city-select option { background:#1a1208; color:var(--text); }
+
+/* ── Era selector ── */
+.era-list { display:flex; flex-direction:column; gap:10px; }
+.era-btn {
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(201,168,76,0.18);
+  border-radius:13px; padding:14px 16px;
+  cursor:pointer; transition:all 0.22s;
+  display:flex; align-items:center; gap:14px;
+  font-family:'Cairo',sans-serif; text-align:right;
+}
+.era-btn:hover {
+  border-color:var(--gold); background:var(--gold-dim);
+  transform:translateX(-3px);
+}
+.era-btn.active {
+  border-color:var(--gold);
+  background:rgba(201,168,76,0.16);
+  box-shadow:0 0 20px rgba(201,168,76,0.15);
+}
+.era-icon { font-size:26px; flex-shrink:0; }
+.era-info { flex:1; }
+.era-title { font-size:14px; font-weight:700; color:var(--gold-light); }
+.era-sub { font-size:11px; color:var(--text-dim); margin-top:2px; line-height:1.5; }
+.era-badge {
+  font-size:10px; padding:3px 9px; border-radius:20px;
+  background:rgba(201,168,76,0.12); color:var(--gold);
+  border:1px solid rgba(201,168,76,0.25); flex-shrink:0; white-space:nowrap;
+}
+
+/* ── Calculate button ── */
+.calc-btn {
+  width:100%; padding:16px;
+  background:linear-gradient(135deg, #b8902a, #d4a940, #c9a84c);
+  border:none; border-radius:13px;
+  font-family:'Cairo',sans-serif; font-size:15px; font-weight:700;
+  color:#0a0600; cursor:pointer; transition:all 0.25s;
+  margin-top:8px; position:relative; overflow:hidden;
+}
+.calc-btn::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+  opacity:0; transition:opacity 0.2s;
+}
+.calc-btn:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(201,168,76,0.35); }
+.calc-btn:hover::after { opacity:1; }
+.calc-btn:active { transform:translateY(0); }
+
+/* ── Result card ── */
+.result-card {
+  display:none; opacity:0; transform:translateY(30px);
+  transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.result-card.show { display:block; opacity:1; transform:translateY(0); }
+
+/* Days display */
+.days-hero {
+  text-align:center; padding:30px 20px 24px;
+  background:linear-gradient(145deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+  border-radius:16px; margin-bottom:20px;
+  border:1px solid var(--gold-border); position:relative; overflow:hidden;
+}
+.days-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%);
+}
+.era-headline { font-size:13px; color:var(--text-dim); margin-bottom:8px; letter-spacing:0.5px; }
+.journey-title {
+  font-family:'Amiri',serif; font-size:22px; color:var(--gold-light);
+  line-height:1.4; margin-bottom:18px;
+}
+.days-num {
+  font-family:'Amiri',serif; font-size:80px; font-weight:700;
+  color:var(--gold-light); line-height:1;
+  text-shadow:0 0 40px rgba(201,168,76,0.4);
+  display:block; position:relative; z-index:1;
+}
+.days-label {
+  font-size:13px; color:var(--text-dim); margin-top:4px; display:block;
+}
+.journey-route {
+  display:inline-block; margin-top:14px;
+  font-size:12px; color:var(--gold);
+  background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.25);
+  border-radius:20px; padding:5px 14px;
+}
+
+/* Details grid */
+.details-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.detail-item {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px; padding:13px 12px;
+  display:flex; flex-direction:column; gap:4px;
+}
+.d-icon { font-size:18px; }
+.d-label { font-size:10px; color:var(--text-dim); letter-spacing:0.5px; }
+.d-value { font-size:12px; color:var(--text); line-height:1.4; font-weight:600; }
+
+/* Comparison bar */
+.compare-bar {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:13px; padding:16px 14px; margin-bottom:14px;
+}
+.compare-title { font-size:11px; color:var(--gold); margin-bottom:12px; letter-spacing:0.5px; font-weight:700; }
+.bar-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.bar-row:last-child { margin-bottom:0; }
+.bar-era-name { font-size:11px; color:var(--text-dim); width:80px; flex-shrink:0; text-align:right; }
+.bar-track { flex:1; height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; transition:width 1s cubic-bezier(0.34,1,0.64,1); }
+.bar-days-text { font-size:11px; color:var(--gold-light); width:55px; flex-shrink:0; text-align:left; }
+
+/* Today compare */
+.today-compare {
+  background:linear-gradient(135deg,rgba(45,106,79,0.2),rgba(82,183,136,0.08));
+  border:1px solid rgba(82,183,136,0.25); border-radius:13px;
+  padding:14px 16px; margin-bottom:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.today-icon { font-size:26px; flex-shrink:0; }
+.today-label { font-size:10px; color:var(--green-light); letter-spacing:0.5px; display:block; margin-bottom:3px; }
+.today-value { font-size:13px; color:var(--text); font-weight:600; line-height:1.5; }
+
+/* Reflection */
+.reflection {
+  background:rgba(255,255,255,0.025); border-right:3px solid var(--gold);
+  border-radius:0 12px 12px 0; padding:16px 18px;
+  margin-bottom:20px;
+}
+.reflection p {
+  font-family:'Amiri',serif; font-size:16px; color:var(--text);
+  line-height:2; font-style:italic;
+}
+
+/* Pilgrim count */
+.pilgrim-count {
+  display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,0.025); border-radius:12px;
+  padding:13px 15px; margin-bottom:16px;
+  border:1px solid rgba(255,255,255,0.06);
+}
+.pilgrim-icon { font-size:20px; }
+.pilgrim-text { font-size:12px; color:var(--text-dim); }
+.pilgrim-num { font-size:14px; color:var(--gold-light); font-weight:700; display:block; }
+
+/* Buttons */
+.share-btn {
+  width:100%; padding:14px;
+  background:transparent; border:1px solid var(--gold-border);
+  border-radius:12px; color:var(--gold);
+  font-family:'Cairo',sans-serif; font-size:13px; font-weight:700;
+  cursor:pointer; transition:all 0.2s; margin-bottom:10px;
+}
+.share-btn:hover { background:var(--gold-dim); border-color:var(--gold); }
+.reset-btn {
+  width:100%; padding:12px;
+  background:transparent; border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px; color:var(--text-dim);
+  font-family:'Cairo',sans-serif; font-size:12px;
+  cursor:pointer; transition:all 0.2s;
+}
+.reset-btn:hover { border-color:rgba(255,255,255,0.2); color:var(--text); }
+
+/* Toast */
+.toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:rgba(201,168,76,0.95); color:#0a0600; font-weight:700; font-size:13px;
+  padding:12px 24px; border-radius:30px;
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index:999;
+  white-space:nowrap; font-family:'Cairo',sans-serif;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* Footer */
+.footer { text-align:center; padding:30px 0 0; font-size:12px; color:var(--text-dim); line-height:2; }
+
+/* Navigation buttons between steps */
+.nav-row { display:flex; gap:10px; margin-top:16px; }
+.back-btn {
+  flex:0 0 auto; padding:12px 20px;
+  background:transparent; border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px; color:var(--text-dim);
+  font-family:'Cairo',sans-serif; font-size:13px;
+  cursor:pointer; transition:all 0.2s;
+}
+.back-btn:hover { border-color:rgba(255,255,255,0.25); color:var(--text); }
+.next-btn {
+  flex:1; padding:13px;
+  background:linear-gradient(135deg,#b8902a,#d4a940);
+  border:none; border-radius:12px; color:#0a0600;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; transition:all 0.2s;
+}
+.next-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(201,168,76,0.3); }
+
+/* Responsive */
+@media(max-width:400px) {
+  .country-grid { grid-template-columns:1fr; }
+  .details-grid { grid-template-columns:1fr; }
+  .days-num { font-size:64px; }
+}
+
+/* ── Language switcher ── */
+.lang-bar {
+  display:flex; justify-content:center; gap:8px;
+  margin-bottom:22px; flex-wrap:wrap;
+}
+.lang-btn {
+  padding:8px 18px; border-radius:20px; cursor:pointer;
+  font-family:'Cairo',sans-serif; font-size:13px; font-weight:700;
+  border:1px solid rgba(201,168,76,0.28);
+  background:rgba(255,255,255,0.03);
+  color:var(--text-dim);
+  transition:all 0.2s; letter-spacing:0.5px;
+}
+.lang-btn:hover { border-color:var(--gold); color:var(--text); background:var(--gold-dim); }
+.lang-btn.active {
+  background:rgba(201,168,76,0.18);
+  border-color:var(--gold);
+  color:var(--gold-light);
+  box-shadow:0 0 14px rgba(201,168,76,0.18);
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="ambient"></div>
+
+<div class="container">
+
+  <div class="header">
+    <span class="kaaba-icon">🕋</span>
+    <h1 id="mainTitle">لو حججت قبل...</h1>
+    <div class="gold-line"></div>
+    <p class="subtitle" id="mainSubtitle">اكتشف كيف كانت رحلتك إلى بيت الله<br>عبر ١٤٠٠ سنة من التاريخ</p>
+  </div>
+
+  <!-- Language switcher -->
+  <div class="lang-bar">
+    <button class="lang-btn active" onclick="setLang('ar')">العربية</button>
+    <button class="lang-btn" onclick="setLang('en')">English</button>
+    <button class="lang-btn" onclick="setLang('ur')">اردو</button>
+    <button class="lang-btn" onclick="setLang('id')">Indonesia</button>
+  </div>
+
+  <!-- Step indicators -->
+  <div class="step-indicator" id="stepIndicator">
+    <div class="step-dot active" id="dot1">١ · بلدك</div>
+    <div class="step-dot" id="dot2">٢ · مدينتك</div>
+    <div class="step-dot" id="dot3">٣ · الحقبة</div>
+  </div>
+
+  <!-- ═══ STEP 1: Country ═══ -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title">🌍 اختر بلدك</div>
+      <div class="country-grid" id="countryGrid">
+        <button class="country-btn" data-country="sa" onclick="selectCountry(this)">
+          <span class="flag">🇸🇦</span>
+          <div>
+            <div class="c-name">المملكة العربية السعودية</div>
+            <div class="c-sub">أرض الحرمين</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="eg" onclick="selectCountry(this)">
+          <span class="flag">🇪🇬</span>
+          <div>
+            <div class="c-name">مصر</div>
+            <div class="c-sub">أم الدنيا</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="pk" onclick="selectCountry(this)">
+          <span class="flag">🇵🇰</span>
+          <div>
+            <div class="c-name">باكستان</div>
+            <div class="c-sub">Pakistan</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="in" onclick="selectCountry(this)">
+          <span class="flag">🇮🇳</span>
+          <div>
+            <div class="c-name">الهند</div>
+            <div class="c-sub">India</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="id" onclick="selectCountry(this)">
+          <span class="flag">🇮🇩</span>
+          <div>
+            <div class="c-name">إندونيسيا</div>
+            <div class="c-sub">Indonesia</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="dz" onclick="selectCountry(this)">
+          <span class="flag">🇩🇿</span>
+          <div>
+            <div class="c-name">الجزائر</div>
+            <div class="c-sub">Algérie</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="ma" onclick="selectCountry(this)">
+          <span class="flag">🇲🇦</span>
+          <div>
+            <div class="c-name">المغرب</div>
+            <div class="c-sub">Maroc</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="bd" onclick="selectCountry(this)">
+          <span class="flag">🇧🇩</span>
+          <div>
+            <div class="c-name">بنغلاديش</div>
+            <div class="c-sub">Bangladesh</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="sy" onclick="selectCountry(this)">
+          <span class="flag">🇸🇾</span>
+          <div>
+            <div class="c-name">سوريا</div>
+            <div class="c-sub">Syria</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="lb" onclick="selectCountry(this)">
+          <span class="flag">🇱🇧</span>
+          <div>
+            <div class="c-name">لبنان</div>
+            <div class="c-sub">Lebanon</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="jo" onclick="selectCountry(this)">
+          <span class="flag">🇯🇴</span>
+          <div>
+            <div class="c-name">الأردن</div>
+            <div class="c-sub">Jordan</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="ye" onclick="selectCountry(this)">
+          <span class="flag">🇾🇪</span>
+          <div>
+            <div class="c-name">اليمن</div>
+            <div class="c-sub">Yemen</div>
+          </div>
+        </button>
+        <button class="country-btn" data-country="ng" onclick="selectCountry(this)">
+          <span class="flag">🇳🇬</span>
+          <div>
+            <div class="c-name">نيجيريا</div>
+            <div class="c-sub">Nigeria</div>
+          </div>
+        </button>
+      </div>
+      <div class="nav-row">
+        <button class="next-btn" onclick="goStep2()">التالي — اختر مدينتك ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2: City ═══ -->
+  <div id="step2" style="display:none">
+    <div class="card">
+      <div class="card-title" id="cityCardTitle">🏙️ اختر مدينتك</div>
+      <span class="select-label">المدينة التي ستنطلق منها</span>
+      <select class="city-select" id="citySelect">
+        <option value="">— اختر المدينة —</option>
+      </select>
+      <div id="cityInfo" style="margin-top:14px; display:none;">
+        <div class="detail-item" style="border-color:var(--gold-border);">
+          <span class="d-icon">📍</span>
+          <span class="d-label">المسافة التقريبية إلى مكة</span>
+          <span class="d-value" id="cityDistText">—</span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button class="back-btn" onclick="goStep1()">→ رجوع</button>
+        <button class="next-btn" onclick="goStep3()">التالي — اختر الحقبة ←</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3: Era ═══ -->
+  <div id="step3" style="display:none">
+    <div class="card">
+      <div class="card-title">⏳ في أي حقبة كنت ستحج؟</div>
+      <div class="era-list">
+        <button class="era-btn" data-era="1400" onclick="selectEra(this)">
+          <span class="era-icon">🌙</span>
+          <div class="era-info">
+            <div class="era-title">صدر الإسلام</div>
+            <div class="era-sub">الجمل والخيل — الرحلة وصية وداع</div>
+          </div>
+          <span class="era-badge">قبل ١٤٠٠ سنة</span>
+        </button>
+        <button class="era-btn" data-era="1000" onclick="selectEra(this)">
+          <span class="era-icon">🏰</span>
+          <div class="era-info">
+            <div class="era-title">العصر العباسي</div>
+            <div class="era-sub">درب زبيدة — محطات مياه وأول تنظيم رسمي</div>
+          </div>
+          <span class="era-badge">قبل ١٠٠٠ سنة</span>
+        </button>
+        <button class="era-btn" data-era="400" onclick="selectEra(this)">
+          <span class="era-icon">⚔️</span>
+          <div class="era-info">
+            <div class="era-title">العصر العثماني</div>
+            <div class="era-sub">القافلة السلطانية والمحمل المصري</div>
+          </div>
+          <span class="era-badge">قبل ٤٠٠ سنة</span>
+        </button>
+        <button class="era-btn" data-era="115" onclick="selectEra(this)">
+          <span class="era-icon">🚂</span>
+          <div class="era-info">
+            <div class="era-title">عصر قطار الحجاز</div>
+            <div class="era-sub">١٩٠٨م — ثورة النقل الأولى</div>
+          </div>
+          <span class="era-badge">قبل ١١٥ سنة</span>
+        </button>
+        <button class="era-btn" data-era="70" onclick="selectEra(this)">
+          <span class="era-icon">🚢</span>
+          <div class="era-info">
+            <div class="era-title">عصر البواخر</div>
+            <div class="era-sub">١٩٥٠م — السفن البخارية والتنظيم الأول</div>
+          </div>
+          <span class="era-badge">قبل ٧٠ سنة</span>
+        </button>
+        <button class="era-btn" data-era="50" onclick="selectEra(this)">
+          <span class="era-icon">✈️</span>
+          <div class="era-info">
+            <div class="era-title">فجر الطيران</div>
+            <div class="era-sub">١٩٧٠م — الطائرة تغيّر كل شيء</div>
+          </div>
+          <span class="era-badge">قبل ٥٠ سنة</span>
+        </button>
+        <button class="era-btn" data-era="0" onclick="selectEra(this)">
+          <span class="era-icon">🌐</span>
+          <div class="era-info">
+            <div class="era-title">الحج الرقمي — اليوم</div>
+            <div class="era-sub">تطبيقات ذكية وخيام مكيفة وملايين الوجبات</div>
+          </div>
+          <span class="era-badge">١٤٤٧ هـ</span>
+        </button>
+      </div>
+      <div class="nav-row" style="margin-top:20px;">
+        <button class="back-btn" onclick="goStep2()">→ رجوع</button>
+        <button class="calc-btn" style="flex:1;" onclick="calculate()">🕋 احسب رحلتي</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESULT ═══ -->
+  <div class="result-card" id="resultCard">
+
+    <div class="days-hero">
+      <div class="era-headline" id="resEraLabel">العصر العباسي — قبل ١٠٠٠ سنة</div>
+      <div class="journey-title" id="resTitle">لو حججت من القاهرة قبل ١٠٠٠ سنة</div>
+      <span class="days-num" id="resDays">٤٥</span>
+      <span class="days-label">يوماً في الطريق</span>
+      <div class="journey-route" id="resRoute">درب الحجاز البري 🐪</div>
+    </div>
+
+    <!-- Comparison bar chart -->
+    <div class="compare-bar" id="compareBar">
+      <div class="compare-title">⏱ مقارنة الرحلة عبر العصور</div>
+      <div id="barsContainer"></div>
+    </div>
+
+    <div class="details-grid" id="detailsGrid"></div>
+
+    <div class="pilgrim-count" id="pilgrimDiv">
+      <span class="pilgrim-icon">👥</span>
+      <div class="pilgrim-text">
+        <span class="d-label">عدد الحجاج في تلك الحقبة</span>
+        <span class="pilgrim-num" id="pilgrimNum">—</span>
+      </div>
+    </div>
+
+    <div class="today-compare" id="todayCompare" style="display:none">
+      <div class="today-icon">✈️</div>
+      <div>
+        <span class="today-label">✨ اليوم بدلاً من ذلك</span>
+        <div class="today-value" id="todayText"></div>
+      </div>
+    </div>
+
+    <div class="reflection">
+      <p id="reflectionText"></p>
+    </div>
+
+    <button class="share-btn" onclick="shareResult()">📤 شارك رحلتك عبر الزمن</button>
+    <button class="reset-btn" onclick="resetForm()">← ابدأ رحلة جديدة</button>
+  </div>
+
+  <div class="footer">
+    <p>🕋 معرض الحج — رحلة عبر الزمن</p>
+    <p>مزدلفة المشرّفة · ١٤٤٧ هـ</p>
+  </div>
+
+</div><!-- /container -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// LANGUAGE SYSTEM
+// ══════════════════════════════════════════
+let currentLang = 'ar';
+
+const T = {
+  ar: {
+    dir: 'rtl', lang: 'ar',
+    mainTitle: 'لو حججتَ قبل...',
+    mainSubtitle: 'اكتشف كيف كانت رحلتك إلى بيت الله<br>عبر ١٤٠٠ سنة من التاريخ',
+    step1Label: '١ · بلدك',
+    step2Label: '٢ · مدينتك',
+    step3Label: '٣ · الحقبة',
+    chooseCountry: '🌍 اختر بلدك',
+    chooseCity: '🏙️ اختر مدينتك',
+    cityFrom: 'المدينة التي ستنطلق منها',
+    citySelectPlaceholder: '— اختر المدينة —',
+    distLabel: 'المسافة التقريبية إلى مكة',
+    chooseEra: '⏳ في أي حقبة كنت ستحج؟',
+    nextCountry: 'التالي — اختر مدينتك ←',
+    nextCity: 'التالي — اختر الحقبة ←',
+    back: '→ رجوع',
+    calculate: '🕋 احسب رحلتي',
+    daysLabel: 'يوماً في الطريق',
+    todayLabel: '✨ اليوم بدلاً من ذلك',
+    pilgrimLabel: 'عدد الحجاج في تلك الحقبة',
+    shareBtn: '📤 شارك رحلتك عبر الزمن',
+    resetBtn: '← ابدأ رحلة جديدة',
+    compareTitle: '⏱ مقارنة الرحلة عبر العصور',
+    footerLine1: '🕋 معرض الحج — رحلة عبر الزمن',
+    footerLine2: 'مزدلفة المشرّفة · ١٤٤٧ هـ',
+    todayToast: 'اختر بلدك أولاً 🌍',
+    cityToast: 'اختر مدينتك أولاً 🏙️',
+    eraToast: 'اختر الحقبة الزمنية ⏳',
+    shareText: (city, era, days) => `🕋 لو حججت من ${city} ${era}، كانت رحلتي ${days} يوماً في الطريق!\n\nاكتشف رحلتك عبر الزمن:`,
+    todayTitle: (city, flag) => `حجك اليوم من ${city} ${flag}`,
+    eraTitle: (city, country, flag) => `لو حججت من ${city}، ${country} ${flag}`,
+    daysToday: (city) => city,
+    detailLabels: ['وسيلة التنقل','المبيت','الماء','الغذاء','التكلفة','مستوى الخطر','الرعاية الصحية'],
+    eraLabels: {
+      1400: { title:'صدر الإسلام', sub:'الجمل والخيل — الرحلة وصية وداع', badge:'قبل ١٤٠٠ سنة' },
+      1000: { title:'العصر العباسي', sub:'درب زبيدة — محطات مياه وأول تنظيم رسمي', badge:'قبل ١٠٠٠ سنة' },
+      400:  { title:'العصر العثماني', sub:'القافلة السلطانية والمحمل المصري', badge:'قبل ٤٠٠ سنة' },
+      115:  { title:'عصر قطار الحجاز', sub:'١٩٠٨م — ثورة النقل الأولى', badge:'قبل ١١٥ سنة' },
+      70:   { title:'عصر البواخر', sub:'١٩٥٠م — السفن البخارية والتنظيم الأول', badge:'قبل ٧٠ سنة' },
+      50:   { title:'فجر الطيران', sub:'١٩٧٠م — الطائرة تغيّر كل شيء', badge:'قبل ٥٠ سنة' },
+      0:    { title:'الحج الرقمي — اليوم', sub:'تطبيقات ذكية وخيام مكيفة وملايين الوجبات', badge:'١٤٤٧ هـ' },
+    },
+  },
+  en: {
+    dir: 'ltr', lang: 'en',
+    mainTitle: 'If You Had Performed Hajj Before...',
+    mainSubtitle: 'Discover what your journey to the House of God<br>would have looked like across 1,400 years of history',
+    step1Label: '1 · Country',
+    step2Label: '2 · City',
+    step3Label: '3 · Era',
+    chooseCountry: '🌍 Choose Your Country',
+    chooseCity: '🏙️ Choose Your City',
+    cityFrom: 'The city you would depart from',
+    citySelectPlaceholder: '— Select a city —',
+    distLabel: 'Approximate distance to Makkah',
+    chooseEra: '⏳ Which era would you have made Hajj?',
+    nextCountry: 'Next — Choose Your City →',
+    nextCity: 'Next — Choose Era →',
+    back: '← Back',
+    calculate: '🕋 Calculate My Journey',
+    daysLabel: 'days on the road',
+    todayLabel: '✨ Today instead',
+    pilgrimLabel: 'Number of pilgrims in that era',
+    shareBtn: '📤 Share Your Journey Through Time',
+    resetBtn: '→ Start a New Journey',
+    compareTitle: '⏱ Journey Comparison Across Eras',
+    footerLine1: '🕋 Hajj Exhibition — A Journey Through Time',
+    footerLine2: 'Muzdalifah · 1447 AH',
+    todayToast: 'Please choose your country first 🌍',
+    cityToast: 'Please choose your city first 🏙️',
+    eraToast: 'Please choose an era ⏳',
+    shareText: (city, era, days) => `🕋 If I had performed Hajj from ${city} ${era}, my journey would have been ${days} days!\n\nDiscover your journey through time:`,
+    todayTitle: (city, flag) => `Your Hajj today from ${city} ${flag}`,
+    eraTitle: (city, country, flag) => `If you made Hajj from ${city}, ${country} ${flag}`,
+    daysToday: (city) => city,
+    detailLabels: ['Transport','Accommodation','Water','Food','Cost','Risk Level','Healthcare'],
+    eraLabels: {
+      1400: { title:'Early Islam', sub:'Camels & horses — the journey was a farewell', badge:'1,400 years ago' },
+      1000: { title:'Abbasid Era', sub:'Darb Zubaydah — water stations & first organization', badge:'1,000 years ago' },
+      400:  { title:'Ottoman Era', sub:'The Sultan\'s caravan and the Egyptian Mahmal', badge:'400 years ago' },
+      115:  { title:'Hijaz Railway Era', sub:'1908 — the first transport revolution', badge:'115 years ago' },
+      70:   { title:'Steamship Era', sub:'1950s — steam ships and early organization', badge:'70 years ago' },
+      50:   { title:'Dawn of Aviation', sub:'1970s — the airplane changes everything', badge:'50 years ago' },
+      0:    { title:'Digital Hajj — Today', sub:'Smart apps, air-conditioned tents, millions of meals', badge:'1447 AH' },
+    },
+  },
+  ur: {
+    dir: 'rtl', lang: 'ur',
+    mainTitle: 'اگر آپ پہلے حج کرتے...',
+    mainSubtitle: 'دریافت کریں کہ بیت اللہ کا سفر<br>١٤٠٠ سال کی تاریخ میں کیسا ہوتا',
+    step1Label: '١ · ملک',
+    step2Label: '٢ · شہر',
+    step3Label: '٣ · دور',
+    chooseCountry: '🌍 اپنا ملک منتخب کریں',
+    chooseCity: '🏙️ اپنا شہر منتخب کریں',
+    cityFrom: 'جس شہر سے آپ روانہ ہوتے',
+    citySelectPlaceholder: '— شہر منتخب کریں —',
+    distLabel: 'مکہ مکرمہ سے تقریبی فاصلہ',
+    chooseEra: '⏳ کس دور میں حج کرنا چاہتے ہیں؟',
+    nextCountry: 'اگلا — شہر منتخب کریں ←',
+    nextCity: 'اگلا — دور منتخب کریں ←',
+    back: '→ واپس',
+    calculate: '🕋 میرا سفر حساب کریں',
+    daysLabel: 'دن سفر میں',
+    todayLabel: '✨ آج کے بجائے',
+    pilgrimLabel: 'اس دور میں حجاج کی تعداد',
+    shareBtn: '📤 اپنا سفر شیئر کریں',
+    resetBtn: '← نیا سفر شروع کریں',
+    compareTitle: '⏱ ادوار میں سفر کا موازنہ',
+    footerLine1: '🕋 حج نمائش — وقت کے پار سفر',
+    footerLine2: 'مزدلفہ مشرّفہ · ١٤٤٧ ھ',
+    todayToast: 'پہلے اپنا ملک منتخب کریں 🌍',
+    cityToast: 'پہلے اپنا شہر منتخب کریں 🏙️',
+    eraToast: 'دور منتخب کریں ⏳',
+    shareText: (city, era, days) => `🕋 اگر میں ${city} سے ${era} حج کرتا، میرا سفر ${days} دن کا ہوتا!\n\nاپنا سفر دریافت کریں:`,
+    todayTitle: (city, flag) => `آج ${city} ${flag} سے آپ کا حج`,
+    eraTitle: (city, country, flag) => `اگر آپ ${city}، ${country} ${flag} سے حج کرتے`,
+    daysToday: (city) => city,
+    detailLabels: ['آمدورفت','قیام','پانی','کھانا','لاگت','خطرے کی سطح','صحت کی دیکھ بھال'],
+    eraLabels: {
+      1400: { title:'صدر اسلام', sub:'اونٹ اور گھوڑے — سفر آخری وداع تھا', badge:'١٤٠٠ سال پہلے' },
+      1000: { title:'عباسی دور', sub:'درب زبیدہ — پانی کے مراکز اور پہلی تنظیم', badge:'١٠٠٠ سال پہلے' },
+      400:  { title:'عثمانی دور', sub:'سلطانی قافلہ اور مصری محمل', badge:'٤٠٠ سال پہلے' },
+      115:  { title:'حجاز ریلوے کا دور', sub:'١٩٠٨ — پہلا نقل و حمل انقلاب', badge:'١١٥ سال پہلے' },
+      70:   { title:'بحری جہاز کا دور', sub:'١٩٥٠ — بھاپ کے جہاز اور پہلی تنظیم', badge:'٧٠ سال پہلے' },
+      50:   { title:'ہوا بازی کی فجر', sub:'١٩٧٠ — ہوائی جہاز نے سب کچھ بدل دیا', badge:'٥٠ سال پہلے' },
+      0:    { title:'ڈیجیٹل حج — آج', sub:'سمارٹ ایپس، ایئرکنڈیشنڈ خیمے، لاکھوں کھانے', badge:'١٤٤٧ ھ' },
+    },
+  },
+  id: {
+    dir: 'ltr', lang: 'id',
+    mainTitle: 'Seandainya Anda Berhaji Sebelum...',
+    mainSubtitle: 'Temukan bagaimana perjalanan Anda ke Baitullah<br>dalam 1.400 tahun sejarah',
+    step1Label: '1 · Negara',
+    step2Label: '2 · Kota',
+    step3Label: '3 · Era',
+    chooseCountry: '🌍 Pilih Negara Anda',
+    chooseCity: '🏙️ Pilih Kota Anda',
+    cityFrom: 'Kota keberangkatan Anda',
+    citySelectPlaceholder: '— Pilih kota —',
+    distLabel: 'Jarak perkiraan ke Makkah',
+    chooseEra: '⏳ Di era mana Anda akan berhaji?',
+    nextCountry: 'Berikutnya — Pilih Kota →',
+    nextCity: 'Berikutnya — Pilih Era →',
+    back: '← Kembali',
+    calculate: '🕋 Hitung Perjalanan Saya',
+    daysLabel: 'hari dalam perjalanan',
+    todayLabel: '✨ Hari ini sebagai gantinya',
+    pilgrimLabel: 'Jumlah jamaah haji di era tersebut',
+    shareBtn: '📤 Bagikan Perjalanan Anda',
+    resetBtn: '→ Mulai Perjalanan Baru',
+    compareTitle: '⏱ Perbandingan Perjalanan Antar Era',
+    footerLine1: '🕋 Pameran Haji — Perjalanan Lintas Waktu',
+    footerLine2: 'Muzdalifah yang Mulia · 1447 H',
+    todayToast: 'Pilih negara Anda terlebih dahulu 🌍',
+    cityToast: 'Pilih kota Anda terlebih dahulu 🏙️',
+    eraToast: 'Pilih era terlebih dahulu ⏳',
+    shareText: (city, era, days) => `🕋 Seandainya saya berhaji dari ${city} ${era}, perjalanan saya ${days} hari!\n\nTemukan perjalanan Anda:`,
+    todayTitle: (city, flag) => `Haji Anda hari ini dari ${city} ${flag}`,
+    eraTitle: (city, country, flag) => `Seandainya Anda berhaji dari ${city}, ${country} ${flag}`,
+    daysToday: (city) => city,
+    detailLabels: ['Transportasi','Akomodasi','Air','Makanan','Biaya','Tingkat Risiko','Layanan Kesehatan'],
+    eraLabels: {
+      1400: { title:'Awal Islam', sub:'Unta & kuda — perjalanan adalah perpisahan terakhir', badge:'1.400 tahun lalu' },
+      1000: { title:'Era Abbasiyah', sub:'Darb Zubaydah — pos air & organisasi pertama', badge:'1.000 tahun lalu' },
+      400:  { title:'Era Ottoman', sub:'Kafilah Sultan dan Mahmal Mesir', badge:'400 tahun lalu' },
+      115:  { title:'Era Kereta Hijaz', sub:'1908 — revolusi transportasi pertama', badge:'115 tahun lalu' },
+      70:   { title:'Era Kapal Uap', sub:'1950-an — kapal uap dan organisasi awal', badge:'70 tahun lalu' },
+      50:   { title:'Fajar Penerbangan', sub:'1970-an — pesawat mengubah segalanya', badge:'50 tahun lalu' },
+      0:    { title:'Haji Digital — Hari Ini', sub:'Aplikasi cerdas, tenda ber-AC, jutaan makanan', badge:'1447 H' },
+    },
+  },
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+
+  // Update html dir and lang
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', t.lang);
+
+  // Active button
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+
+  // Header
+  document.getElementById('mainTitle').textContent = t.mainTitle;
+  document.getElementById('mainSubtitle').innerHTML = t.mainSubtitle;
+
+  // Step dots
+  document.getElementById('dot1').textContent = t.step1Label;
+  document.getElementById('dot2').textContent = t.step2Label;
+  document.getElementById('dot3').textContent = t.step3Label;
+
+  // Card titles
+  document.querySelector('#step1 .card-title').textContent = t.chooseCountry;
+  document.querySelector('#step2 .card-title').textContent = t.chooseCity;
+  document.querySelector('#step3 .card-title').textContent = t.chooseEra;
+
+  // City section
+  document.querySelector('.select-label').textContent = t.cityFrom;
+  const citySelect = document.getElementById('citySelect');
+  if(citySelect.options[0]) citySelect.options[0].textContent = t.citySelectPlaceholder;
+  const distLabel = document.querySelector('#cityInfo .d-label');
+  if(distLabel) distLabel.textContent = t.distLabel;
+
+  // Buttons
+  document.querySelector('#step1 .next-btn').textContent = t.nextCountry;
+  document.querySelector('#step2 .next-btn').textContent = t.nextCity;
+  document.querySelector('#step2 .back-btn').textContent = t.back;
+  document.querySelector('#step3 .back-btn').textContent = t.back;
+  document.querySelector('#step3 .calc-btn').textContent = t.calculate;
+
+  // Era buttons
+  const eraKeys = [1400, 1000, 400, 115, 70, 50, 0];
+  document.querySelectorAll('.era-btn').forEach((btn, i) => {
+    const key = eraKeys[i];
+    const el = t.eraLabels[key];
+    if(el) {
+      btn.querySelector('.era-title').textContent = el.title;
+      btn.querySelector('.era-sub').textContent = el.sub;
+      btn.querySelector('.era-badge').textContent = el.badge;
+    }
+  });
+
+  // Result section
+  document.querySelector('.days-label').textContent = t.daysLabel;
+  document.querySelector('.today-label').textContent = t.todayLabel;
+  document.querySelector('.pilgrim-text .d-label').textContent = t.pilgrimLabel;
+  document.querySelector('.share-btn').textContent = t.shareBtn;
+  document.querySelector('.reset-btn').textContent = t.resetBtn;
+  document.querySelector('.compare-title').textContent = t.compareTitle;
+
+  // Footer
+  const footerPs = document.querySelectorAll('.footer p');
+  if(footerPs[0]) footerPs[0].textContent = t.footerLine1;
+  if(footerPs[1]) footerPs[1].textContent = t.footerLine2;
+
+  // Re-render result if visible
+  if(document.getElementById('resultCard').classList.contains('show')) {
+    calculate();
+  }
+}
+
+// ── Stars ──
+const starsEl = document.getElementById('stars');
+for(let i=0;i<90;i++){
+  const s=document.createElement('div'); s.className='star';
+  const sz=Math.random()*2+0.4;
+  s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--min-o:${(Math.random()*0.15+0.05).toFixed(2)};--max-o:${(Math.random()*0.4+0.35).toFixed(2)};--d:${(Math.random()*5+2).toFixed(1)}s;--delay:${(Math.random()*5).toFixed(1)}s`;
+  starsEl.appendChild(s);
+}
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const countries = {
+  sa: {
+    name:'المملكة العربية السعودية', flag:'🇸🇦',
+    cities: [
+      { id:'makkah',  name:'مكة المكرمة',    dist:0,    today:'دقائق بالسيارة 🚗' },
+      { id:'madinah', name:'المدينة المنورة', dist:420,  today:'٣ ساعات بالقطار أو السيارة 🚄' },
+      { id:'riyadh',  name:'الرياض',          dist:900,  today:'ساعة بالطائرة أو ٩ ساعات بالسيارة ✈️' },
+      { id:'jeddah',  name:'جدة',             dist:90,   today:'ساعة بالسيارة 🚗' },
+      { id:'abha',    name:'أبها',            dist:500,  today:'٥ ساعات بالسيارة 🚗' },
+      { id:'tabuk',   name:'تبوك',            dist:1200, today:'ساعة ونصف بالطائرة ✈️' },
+      { id:'hail',    name:'حائل',            dist:1000, today:'ساعة بالطائرة ✈️' },
+      { id:'najran',  name:'نجران',           dist:600,  today:'٦ ساعات بالسيارة 🚗' },
+      { id:'jazan',   name:'جازان',           dist:350,  today:'٤ ساعات بالسيارة 🚗' },
+    ],
+    routes: {
+      1400:'طريق نجد البري عبر الصحراء 🐪',
+      1000:'درب زبيدة المبارك 🐪',
+      400:'طريق الحج البري المحروس ⚔️',
+      115:'الطريق البري',
+      70:'بري أو جوي',
+      50:'طائرة داخلية ✈️',
+      0:'طائرة أو قطار الحرمين ✈️🚄'
+    }
+  },
+  eg: {
+    name:'مصر', flag:'🇪🇬',
+    cities: [{ id:'eg_main', name:'مصر', dist:1250, today:'٤ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'درب الحجاز البري عبر سيناء والحجاز 🐪',
+      1000:'قافلة المحمل المصري العظيمة 🐪',
+      400:'المحمل المصري السلطاني — شهران 🐪',
+      115:'البحر الأحمر بالباخرة ثم براً 🚢',
+      70:'باخرة بخارية من السويس 🚢',
+      50:'طائرة من القاهرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  pk: {
+    name:'باكستان', flag:'🇵🇰',
+    cities: [{ id:'pk_main', name:'باكستان', dist:2900, today:'٣ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'البر عبر أفغانستان وفارس والعراق — أشهر طويلة 🐪',
+      1000:'طريق الحرير البري عبر إيران والعراق 🐪',
+      400:'البر عبر إيران والعراق أو البحر 🐪⛵',
+      115:'بحراً من كراتشي ثم السكة الحديدية 🚢🚂',
+      70:'باخرة من كراتشي 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  in: {
+    name:'الهند', flag:'🇮🇳',
+    cities: [{ id:'in_main', name:'الهند', dist:3900, today:'٤ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'بحر العرب بالمراكب الشراعية ثم براً شهوراً 🛶🐪',
+      1000:'طريق بحري طويل عبر بحر العرب ⛵',
+      400:'بحرياً عبر بحر العرب إلى جدة أو عدن ⛵',
+      115:'سفينة من بومباي إلى جدة 🚢',
+      70:'باخرة من بومباي 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  id: {
+    name:'إندونيسيا', flag:'🇮🇩',
+    cities: [{ id:'id_main', name:'إندونيسيا', dist:9000, today:'٩ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'رحلة بحرية شاقة عبر المحيط الهندي — سنة كاملة 🛶',
+      1000:'طريق بحري مضنٍ عبر المحيط الهندي ⛵',
+      400:'رحلة بحرية عبر المحيط — أشهر طويلة ⛵',
+      115:'سفينة عبر المحيط الهندي وبحر العرب 🚢',
+      70:'باخرة بخارية — أطول رحلة في العالم الإسلامي 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  dz: {
+    name:'الجزائر', flag:'🇩🇿',
+    cities: [{ id:'dz_main', name:'الجزائر', dist:3800, today:'٥ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'القافلة الكبرى براً عبر ليبيا ومصر والحجاز 🐪',
+      1000:'درب الحجاج المغاربة عبر القيروان وطرابلس 🐪',
+      400:'قافلة جزائرية ضخمة براً أو بحراً ⛵🐪',
+      115:'بحراً من الجزائر إلى مصر ثم قناة السويس 🚢',
+      70:'باخرة بحرية طويلة 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  ma: {
+    name:'المغرب', flag:'🇲🇦',
+    cities: [{ id:'ma_main', name:'المغرب', dist:5000, today:'٦ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'القافلة المغربية الكبرى براً — ٣ أشهر قبل الوصول لمصر 🐪',
+      1000:'قافلة الحجاج المغاربة والأندلسيين عبر القيروان 🐪',
+      400:'قافلة مغربية ضخمة براً عبر تونس وليبيا ومصر 🐪',
+      115:'سفينة من الدار البيضاء إلى الإسكندرية ثم قناة السويس 🚢',
+      70:'باخرة عبر البحر المتوسط وقناة السويس 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  bd: {
+    name:'بنغلاديش', flag:'🇧🇩',
+    cities: [{ id:'bd_main', name:'بنغلاديش', dist:5300, today:'٥ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'براً عبر الهند وأفغانستان وفارس أو بحراً عبر المحيط 🐪🛶',
+      1000:'طريق بحري عبر بحر العرب ⛵',
+      400:'بحراً عبر خليج البنغال وبحر العرب ⛵',
+      115:'سفينة عبر المحيط الهندي 🚢',
+      70:'باخرة طويلة عبر بحر العرب 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  sy: {
+    name:'سوريا', flag:'🇸🇾',
+    cities: [{ id:'sy_main', name:'سوريا', dist:1300, today:'ساعتان بالطائرة ✈️' }],
+    routes: {
+      1400:'درب الحج الشامي براً عبر تبوك والمدينة 🐪',
+      1000:'قافلة الحج الشامية العريقة عبر الحجاز 🐪',
+      400:'القافلة الشامية السلطانية — مشهورة بعظمتها 🐪⚔️',
+      115:'قطار الحجاز من دمشق مباشرة 🚂',
+      70:'بري أو بحري عبر البحر الأحمر 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  lb: {
+    name:'لبنان', flag:'🇱🇧',
+    cities: [{ id:'lb_main', name:'لبنان', dist:1500, today:'ساعتان بالطائرة ✈️' }],
+    routes: {
+      1400:'درب الحج الشامي براً عبر سوريا والحجاز 🐪',
+      1000:'مع القافلة الشامية عبر دمشق والحجاز 🐪',
+      400:'مع القافلة الشامية السلطانية من دمشق 🐪⚔️',
+      115:'قطار الحجاز من دمشق عبر الأراضي السورية 🚂',
+      70:'بري عبر سوريا والأردن 🚗',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  jo: {
+    name:'الأردن', flag:'🇯🇴',
+    cities: [{ id:'jo_main', name:'الأردن', dist:1100, today:'ساعة ونصف بالطائرة ✈️' }],
+    routes: {
+      1400:'درب الحج الشامي براً عبر تبوك والمدينة 🐪',
+      1000:'قافلة الحج الشامية عبر تبوك والحجاز 🐪',
+      400:'مع القافلة الشامية السلطانية 🐪⚔️',
+      115:'قطار الحجاز من معان مباشرة — أقرب محطة للحجاز 🚂',
+      70:'بري عبر تبوك 🚗',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  ye: {
+    name:'اليمن', flag:'🇾🇪',
+    cities: [{ id:'ye_main', name:'اليمن', dist:800, today:'ساعة ونصف بالطائرة ✈️' }],
+    routes: {
+      1400:'براً عبر عسير والحجاز أو بحراً من عدن 🐪⛵',
+      1000:'بري عبر عسير أو بحري من عدن إلى جدة ⛵',
+      400:'بري عبر الحجاز أو بحري من عدن 🐪⛵',
+      115:'بحري من عدن إلى جدة 🚢',
+      70:'بحري من عدن 🚢',
+      50:'طائرة من صنعاء ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  },
+  ng: {
+    name:'نيجيريا', flag:'🇳🇬',
+    cities: [{ id:'ng_main', name:'نيجيريا', dist:5500, today:'٦ ساعات بالطائرة ✈️' }],
+    routes: {
+      1400:'رحلة برية شاقة عبر القارة الأفريقية شمالاً ثم مصر 🐪',
+      1000:'القافلة الأفريقية الكبرى عبر ليبيا ومصر 🐪',
+      400:'براً عبر الصحراء الكبرى إلى مصر أو بحراً 🐪⛵',
+      115:'بحري من لاغوس حول القارة أو براً عبر مصر 🚢',
+      70:'باخرة من لاغوس عبر قناة السويس 🚢',
+      50:'طائرة ✈️',
+      0:'طائرة مباشرة ✈️'
+    }
+  }
+};
+
+// ── Eras data ──
+const eras = {
+  1400: {
+    icon:'🌙', label:'صدر الإسلام — قبل ١٤٠٠ سنة',
+    days: { sa:7, eg:90, pk:150, in:160, id:365, dz:130, ma:150, bd:180, sy:35, lb:40, jo:30, ye:25, ng:200 },
+    cityMod: { makkah:0, madinah:3, riyadh:5, jeddah:2, abha:6, tabuk:8, hail:7, najran:7, jazan:4,
+               eg_main:0, pk_main:0, in_main:0, id_main:0, dz_main:0, ma_main:0, bd_main:0,
+               sy_main:0, lb_main:3, jo_main:-3, ye_main:0, ng_main:0 },
+    transport:'قافلة إبل وخيول 🐪',
+    stay:'خيام من الشعر والوبر',
+    water:'آبار وقِرَب جلدية 🏺',
+    food:'تمر وزاد محمول من البيت',
+    cost:'ثروة كاملة — يبيع البعض داره وأرضه',
+    risk:'عالٍ جداً — قطاع الطرق والأوبئة والحر',
+    health:'لا طبابة — الحاج يحمل أدويته الشعبية',
+    pilgrims:'عشرات الآلاف',
+    reflection:'كانت رحلة الحج وصية وداع — يكتب الحاج وصيته قبل الرحيل ويودّع أهله كمن لا يعلم هل سيعود. كانت الفريضة أعظم مما نتخيل اليوم.',
+  },
+  1000: {
+    icon:'🏰', label:'العصر العباسي — قبل ١٠٠٠ سنة',
+    days: { sa:5, eg:60, pk:110, in:120, id:280, dz:100, ma:120, bd:140, sy:22, lb:26, jo:18, ye:18, ng:150 },
+    cityMod: { makkah:0, madinah:2, riyadh:3, jeddah:1, abha:4, tabuk:5, hail:4, najran:5, jazan:3,
+               eg_main:0, pk_main:0, in_main:0, id_main:0, dz_main:0, ma_main:0, bd_main:0,
+               sy_main:0, lb_main:2, jo_main:-2, ye_main:0, ng_main:0 },
+    transport:'قافلة إبل منظمة على درب زبيدة 🐪',
+    stay:'محطات درب زبيدة وخيام',
+    water:'صهاريج درب زبيدة وآبار مُجهّزة 💧',
+    food:'أسواق المحطات وزاد محمول',
+    cost:'مدخرات سنوات عديدة',
+    risk:'متوسط — الدولة تحمي القوافل الكبرى',
+    health:'أطباء القوافل وطب الأعشاب',
+    pilgrims:'مئة ألف تقريباً',
+    reflection:'كانت الخلافة العباسية تُجهّز درب زبيدة بالمحطات والصهاريج. الحاج يسير على الدرب المبارك نفسه الذي مشت عليه أمهات المؤمنين. كان الطريق عبادة والوصول نعمة.',
+  },
+  400: {
+    icon:'⚔️', label:'العصر العثماني — قبل ٤٠٠ سنة',
+    days: { sa:4, eg:45, pk:90, in:100, id:220, dz:80, ma:100, bd:120, sy:15, lb:18, jo:12, ye:14, ng:120 },
+    cityMod: { makkah:0, madinah:1, riyadh:2, jeddah:1, abha:3, tabuk:4, hail:3, najran:3, jazan:2,
+               eg_main:0, pk_main:0, in_main:0, id_main:0, dz_main:0, ma_main:0, bd_main:0,
+               sy_main:0, lb_main:1, jo_main:-1, ye_main:0, ng_main:0 },
+    transport:'القافلة السلطانية المحمية 🐪⚔️',
+    stay:'خيام السلطان وبيوت بالإيجار في مكة',
+    water:'شبكة قنوات عثمانية وزمزم 💧',
+    food:'أسواق مكة والمدينة والزاد المحمول',
+    cost:'مبالغ كبيرة — الدولة تدعم الفقراء',
+    risk:'منخفض — الجيش العثماني يحمي القوافل',
+    health:'أطباء السلطان يرافقون القافلة الكبرى',
+    pilgrims:'مئة وخمسون ألفاً',
+    reflection:'كان السلطان العثماني يُرسل المحمل المصري والقافلة الشامية كل عام. الحاج محمي بسيف السلطان ومحبة الله. وصف الرحالة ابن بطوطة الحج بأنه "أعظم ما شهدته عيناي".',
+  },
+  115: {
+    icon:'🚂', label:'عصر قطار الحجاز — قبل ١١٥ سنة',
+    days: { sa:2, eg:18, pk:30, in:35, id:70, dz:25, ma:30, bd:40, sy:4, lb:6, jo:5, ye:10, ng:45 },
+    cityMod: { makkah:0, madinah:1, riyadh:1, jeddah:0, abha:2, tabuk:2, hail:2, najran:2, jazan:1,
+               eg_main:0, pk_main:0, in_main:0, id_main:0, dz_main:0, ma_main:0, bd_main:0,
+               sy_main:0, lb_main:1, jo_main:0, ye_main:0, ng_main:0 },
+    transport:'سكة حديد الحجاز والسفن البخارية 🚂',
+    stay:'خيام محسّنة وبيوت بالإيجار في مكة',
+    water:'شبكة مياه بدائية + زمزم الشريف 💧',
+    food:'أسواق مكة وما يحمله الحاج',
+    cost:'مبلغ كبير لكن أقل من السابق',
+    risk:'منخفض نسبياً — لكن الأمراض قائمة',
+    health:'أطباء ميدانيون وبدايات الطب الحديث',
+    pilgrims:'مئة وخمسون ألفاً',
+    reflection:'جاء قطار الحجاز ليُقصّر الرحلة لكن لم يُلغِ مشقتها. كان الحاج يُسافر بمدخرات عمره، ويعود بذكرى لا تُنسى وقلب مُغسول بمحبة الله.',
+  },
+  70: {
+    icon:'🚢', label:'عصر البواخر — قبل ٧٠ سنة',
+    days: { sa:1, eg:8, pk:15, in:18, id:28, dz:12, ma:14, bd:20, sy:3, lb:3, jo:2, ye:4, ng:18 },
+    cityMod: { makkah:0, madinah:0, riyadh:1, jeddah:0, abha:1, tabuk:1, hail:1, najran:1, jazan:0,
+               eg_main:0, pk_main:0, in_main:0, id_main:0, dz_main:0, ma_main:0, bd_main:0,
+               sy_main:0, lb_main:0, jo_main:0, ye_main:0, ng_main:0 },
+    transport:'باخرة بخارية عبر البحار 🚢',
+    stay:'خيام نظامية أولى وفنادق بسيطة',
+    water:'شبكة مياه أفضل وزمزم في كل مكان 💧',
+    food:'أسواق متنوعة ووجبات شبه منظمة',
+    cost:'في متناول الطبقة المتوسطة',
+    risk:'منخفض — بداية التنظيم الحكومي',
+    health:'مستشفيات حكومية تبدأ في الظهور',
+    pilgrims:'أربعمئة ألف حاج',
+    reflection:'بدأ الحج يأخذ شكله الحديث. الباخرة تجمع حجاجاً من دول مختلفة يتعارفون ويتشاركون الزاد والدعاء. كانت الرحلة البحرية في حد ذاتها عبادة وذكراً.',
+  },
+  50: {
+    icon:'✈️', label:'فجر الطيران — قبل ٥٠ سنة',
+    days: { sa:1, eg:1, pk:1, in:1, id:1, dz:1, ma:1, bd:1, sy:1, lb:1, jo:1, ye:1, ng:1 },
+    cityMod: {},
+    transport:'طائرة تجارية ✈️',
+    stay:'خيام مكيفة ومجمعات سكنية أولى',
+    water:'ماء زمزم وشبكة مياه كاملة 💧',
+    food:'وجبات منظمة ومطاعم متنوعة',
+    cost:'ميسور لكثير من المسلمين',
+    risk:'منخفض جداً',
+    health:'مستشفيات ميدانية متخصصة',
+    pilgrims:'مليون ونصف حاج',
+    reflection:'صارت الرحلة ساعات بدل أشهر. لكن قلب الحاج حين يرى الكعبة للمرة الأولى يظل نفسه — يسقط بالدموع كمن سقط أجداده قبل خمسمئة عام.',
+  },
+  0: {
+    icon:'🌐', label:'الحج الرقمي — اليوم ١٤٤٧ هـ',
+    days: { sa:1, eg:1, pk:1, in:1, id:1, dz:1, ma:1, bd:1, sy:1, lb:1, jo:1, ye:1, ng:1 },
+    cityMod: {},
+    transport:'طائرة مباشرة ✈️ | قطار الحرمين 🚄',
+    stay:'خيام ذكية مكيفة بالكامل وفنادق ٥ نجوم',
+    water:'ماء زمزم في كل مكان وشبكة مياه ذكية 💧',
+    food:'١٢ مليون وجبة يومياً — متنوعة ومضمونة',
+    cost:'مدعوم ومنظم بالدول والحكومات',
+    risk:'الأدنى في التاريخ — ١٤٠٠ سنة من التحسين',
+    health:'مستشفيات عالمية وطائرات إسعاف جاهزة',
+    pilgrims:'أكثر من مليوني حاج من ١٨٠ دولة',
+    reflection:'اليوم أنت هنا. لحظة في يوم واحد تُعادل ما كان يحلم به أجدادك طوال عمرهم. هذا ليس فقط تطوراً في الخدمات — هو فضل الله على ضيوف الرحمن.',
+  }
+};
+
+const ERA_KEYS = [1400, 1000, 400, 115, 70, 50, 0];
+const ERA_COLORS = ['#8B4513','#A0522D','#CD853F','#DAA520','#4682B4','#1a6e9e','#2d6a4f'];
+
+// ── State ──
+let selCountry = null;
+let selCity    = null;
+let selEra     = null;
+let currentStep = 1;
+
+// ── Country ──
+function selectCountry(btn) {
+  document.querySelectorAll('.country-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selCountry = btn.dataset.country;
+}
+
+// ── City dropdown population ──
+function populateCities(countryId) {
+  const select = document.getElementById('citySelect');
+  const c = countries[countryId];
+  select.innerHTML = '<option value="">— اختر المدينة —</option>';
+  c.cities.forEach(city => {
+    const opt = document.createElement('option');
+    opt.value = city.id;
+    opt.textContent = city.name;
+    select.appendChild(opt);
+  });
+  select.addEventListener('change', onCityChange);
+  document.getElementById('cityCardTitle').textContent = `🏙️ اختر مدينتك في ${c.name} ${c.flag}`;
+}
+
+function onCityChange() {
+  const cityId = this.value;
+  const c = countries[selCountry];
+  const city = c.cities.find(x=>x.id===cityId);
+  selCity = city || null;
+  const infoDiv = document.getElementById('cityInfo');
+  if(city) {
+    infoDiv.style.display='block';
+    document.getElementById('cityDistText').textContent = city.dist===0 ? 'أنت في أرض الحرم 🕋' : `~${city.dist.toLocaleString('ar-SA')} كم من مكة المكرمة`;
+  } else {
+    infoDiv.style.display='none';
+  }
+}
+
+// ── Era ──
+function selectEra(btn) {
+  document.querySelectorAll('.era-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selEra = parseInt(btn.dataset.era);
+}
+
+// ── Step navigation ──
+function goStep1() {
+  document.getElementById('step1').style.display='block';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='none';
+  hideResult();
+  currentStep=1; updateDots();
+}
+function goStep2() {
+  if(!selCountry) { showToast(T[currentLang].todayToast); return; }
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='block';
+  document.getElementById('step3').style.display='none';
+  populateCities(selCountry);
+  currentStep=2; updateDots();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goStep3() {
+  if(!selCity) { showToast(T[currentLang].cityToast); return; }
+  document.getElementById('step1').style.display='none';
+  document.getElementById('step2').style.display='none';
+  document.getElementById('step3').style.display='block';
+  currentStep=3; updateDots();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateDots() {
+  for(let i=1;i<=3;i++) {
+    const dot=document.getElementById(`dot${i}`);
+    dot.className='step-dot';
+    if(i===currentStep) dot.classList.add('active');
+    else if(i<currentStep) dot.classList.add('done');
+  }
+}
+
+// ── Calculate ──
+function calculate() {
+  if(!selCountry||!selCity||selEra===null) { showToast(T[currentLang].eraToast); return; }
+  const c   = countries[selCountry];
+  const e   = eras[selEra];
+  const baseDays = e.days[selCountry] || 1;
+  const mod = (e.cityMod && e.cityMod[selCity.id]) || 0;
+  const days = Math.max(1, baseDays + Math.round(mod));
+  const eraKey = selEra === 0 ? 50 : selEra;
+  const route = c.routes[eraKey] || c.routes[50];
+
+  // Fill hero
+  const t = T[currentLang];
+  document.getElementById('resEraLabel').textContent = e.label;
+  document.getElementById('resTitle').textContent = selEra===0
+    ? t.todayTitle(selCity.name, c.flag)
+    : t.eraTitle(selCity.name, c.name, c.flag);
+  document.getElementById('resDays').textContent = toAr(days);
+  document.getElementById('resRoute').textContent = route;
+
+  // Comparison bars
+  const maxDays = eras[1400].days[selCountry] + 30;
+  const barsHTML = ERA_KEYS.map((key,i) => {
+    const d = eras[key].days[selCountry];
+    const pct = Math.min(100, Math.round(d/maxDays*100));
+    const isSelected = key===selEra;
+    return `<div class="bar-row">
+      <span class="bar-era-name">${eras[key].icon} ${key===0?'اليوم':key+'سنة'}</span>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${pct}%;background:${isSelected?'#C9A84C':ERA_COLORS[i]};opacity:${isSelected?1:0.5}"></div>
+      </div>
+      <span class="bar-days-text">${toAr(d)} يوم</span>
+    </div>`;
+  }).join('');
+  document.getElementById('barsContainer').innerHTML = barsHTML;
+
+  // Details
+  const tl = T[currentLang].detailLabels;
+  const details = [
+    {icon:'🚗',label:tl[0],value:e.transport},
+    {icon:'🏕️',label:tl[1],value:e.stay},
+    {icon:'💧',label:tl[2],value:e.water},
+    {icon:'🍽️',label:tl[3],value:e.food},
+    {icon:'💰',label:tl[4],value:e.cost},
+    {icon:'⚠️',label:tl[5],value:e.risk},
+    {icon:'🏥',label:tl[6],value:e.health},
+  ];
+  document.getElementById('detailsGrid').innerHTML = details.map(d=>`
+    <div class="detail-item">
+      <span class="d-icon">${d.icon}</span>
+      <span class="d-label">${d.label}</span>
+      <span class="d-value">${d.value}</span>
+    </div>`).join('');
+
+  // Pilgrim count
+  document.getElementById('pilgrimNum').textContent = e.pilgrims;
+
+  // Today compare
+  if(selEra>0) {
+    document.getElementById('todayCompare').style.display='flex';
+    document.getElementById('todayText').innerHTML = selCity.today;
+  } else {
+    document.getElementById('todayCompare').style.display='none';
+  }
+
+  // Reflection
+  document.getElementById('reflectionText').textContent = e.reflection;
+
+  // Show result
+  const card = document.getElementById('resultCard');
+  card.style.display='block';
+  card.classList.remove('show');
+  setTimeout(()=>{ card.classList.add('show'); card.scrollIntoView({behavior:'smooth',block:'start'}); },60);
+}
+
+function hideResult() {
+  const card=document.getElementById('resultCard');
+  card.classList.remove('show');
+  setTimeout(()=>card.style.display='none',400);
+}
+
+function toAr(n) {
+  return n.toString().replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+}
+
+function shareResult() {
+  if(!selCity||selEra===null) return;
+  const e=eras[selEra];
+  const days=toAr(Math.max(1,(e.days[selCountry]||1)+((e.cityMod&&e.cityMod[selCity.id])||0)));
+  const t=T[currentLang];
+  const text=t.shareText(selCity.name, e.label, days)+' '+window.location.href;
+  if(navigator.share) {
+    navigator.share({title:t.footerLine1, text});
+  } else {
+    navigator.clipboard?.writeText(text).then(()=>showToast('✓'));
+  }
+}
+
+function resetForm() {
+  document.querySelectorAll('.country-btn,.era-btn').forEach(b=>b.classList.remove('active'));
+  selCountry=null; selCity=null; selEra=null;
+  hideResult();
+  goStep1();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+</script>
+</body>
+</html>
